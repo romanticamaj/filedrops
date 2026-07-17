@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>filedrops</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; margin: 0; background: #111; color: #eee; gap: 16px; }
+    form { display: grid; gap: 10px; width: min(360px, 90vw); }
+    input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #444; }
+    input { background: #222; color: #eee; }
+    button { background: #3b82f6; color: #fff; border: none; cursor: pointer; }
+    .hint { color: #888; font-size: 14px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>filedrops</h1>
+  <form method="POST" action="/new"><button type="submit">建立新房間</button></form>
+  <form method="GET" id="go" onsubmit="location.href='/r/'+encodeURIComponent(this.code.value.trim());return false;">
+    <input name="code" placeholder="或輸入房間碼 / 常用房間" autocomplete="off">
+    <button type="submit">前往</button>
+  </form>
+  <div class="hint">建立隨機房間,或直接輸入你的固定房間碼。</div>
+</body>
+</html>

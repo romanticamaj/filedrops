@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>filedrops</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; margin: 0; background: #111; color: #eee; }
+    form { display: grid; gap: 12px; width: min(320px, 90vw); }
+    input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #444; }
+    input { background: #222; color: #eee; }
+    button { background: #3b82f6; color: #fff; border: none; cursor: pointer; }
+    .err { color: #f87171; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <form method="POST" action="/gate">
+    <h1>filedrops</h1>
+    <input type="password" name="passphrase" placeholder="通關碼" autofocus autocomplete="current-password">
+    <button type="submit">進入</button>
+    <div class="err" id="err"></div>
+  </form>
+</body>
+</html>

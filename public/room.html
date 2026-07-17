@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>filedrops room</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #111; color: #eee; }
+    header { display: flex; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid #333; flex-wrap: wrap; }
+    header img { width: 96px; height: 96px; background: #fff; border-radius: 8px; }
+    .url { font-family: monospace; word-break: break-all; }
+    main { padding: 16px; max-width: 720px; margin: 0 auto; }
+    #drop { border: 2px dashed #555; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; color: #aaa; }
+    #drop.over { border-color: #3b82f6; color: #3b82f6; }
+    #drop.busy { opacity: .5; pointer-events: none; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: 12px; padding: 10px; border-bottom: 1px solid #2a2a2a; }
+    li a { color: #60a5fa; text-decoration: none; flex: 1; word-break: break-all; }
+    li .meta { color: #888; font-size: 13px; }
+    li button, #clear, #logout { background: #333; color: #eee; border: 1px solid #444; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+    .empty { color: #666; justify-content: center; }
+    .bar { display: flex; gap: 8px; margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <img id="qr" alt="QR">
+    <div>
+      <div class="url" id="roomUrl"></div>
+      <div class="bar">
+        <form method="POST" action="/logout" style="margin:0"><button id="logout" type="submit">登出</button></form>
+        <button id="clear">清空房間</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div id="drop">拖拉檔案到這裡,或點擊選檔上傳</div>
+    <input id="picker" type="file" multiple hidden>
+    <ul id="list"></ul>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

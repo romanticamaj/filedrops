@@ -1,0 +1,13 @@
+node_modules/
+data/
+.env
+*.log
+
+# SDD scratch (task briefs, reports, review packages)
+.superpowers/
+
+# Local Claude config (includes the deploy skill with personal specifics)
+.claude/
+
+# Build-process docs (design spec + plan) — kept local, not published
+docs/superpowers/
