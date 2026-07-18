@@ -1,15 +1,22 @@
 # filedrops
 
-A self-hosted, room-based **ephemeral file relay** behind a single site-wide
-passphrase. Walk up to any computer, open a URL, enter the passphrase, and move
-files between machines in both directions — no accounts, no OAuth, no database.
-Runs as a persistent service on a Windows host. Reach it over the local network,
-a Tailscale tailnet, or the public internet via Cloudflare Tunnel (see
-[Access modes](#access-modes)).
+A small self-hosted file relay. Run it on one machine; open a room URL — or scan
+its QR — on any other device, and move files both ways, right in the browser. The
+other end installs nothing: no app, no account, no sign-in. Just a shared passphrase.
 
-**Typical use:** at a client site → open the room URL on the on-site PC → enter
-the passphrase → drag a file → your own laptop (in the same room) sees it and
-downloads it. Reverse works too; hand someone the passphrase to let them upload.
+## The idea
+
+Keep filedrops running on a machine you control — a laptop, a home server, or a
+box exposed through Cloudflare Tunnel. When you need to move a file to or from
+another device (your phone, a client's PC, a public computer), open the room in
+its browser or scan the QR shown on screen. Both ends are looking at the same
+room: drop a file on one side, download it on the other. Because each end is just
+a web page, the only thing the other device needs is a browser.
+
+Rooms are folders on disk. Files stay until you remove them. There is no database.
+
+> The web UI is in Traditional Chinese; the server code and this README are in
+> English, so it is easy to fork and relabel.
 
 ## How it works
 
@@ -40,14 +47,16 @@ fixed room URL (`/r/<your-code>`). Drag files in; the other side sees them withi
 
 ## Usage
 
-- **Create a room:** click *建立新房間* → you're redirected to `/r/<random-code>`.
-- **Fixed personal room:** just visit `/r/<your-own-code>` (e.g. `/r/gary-7x2`).
-  Memorize one URL and type it on any computer — no code to transfer.
-- **Share the room URL / QR:** the room header shows a QR of the current room URL.
-  Scanning it (or opening the URL) on a logged-out device lands on the passphrase
-  page and then goes **straight into that room** — you don't get bounced to the
-  home page. Sharing with someone else = give them the passphrase + the room URL.
-- **Manage files:** per-file *刪除*, or *清空房間* to wipe the whole room.
+- **Create a room** — you're redirected to `/r/<random-code>`.
+- **Fixed room** — visit `/r/<your-code>` (e.g. `/r/team-7x2`) and memorize it.
+  Type the same URL on any machine; there's no code to pass around.
+- **Share** — the room header shows a QR of its URL. Scan it on a logged-out
+  device and you land on the passphrase page, then go **straight into that room**
+  (no bounce to the home page). Sharing with someone else means giving them the
+  passphrase and the room URL.
+- **Upload** — drag files onto the drop zone, or click to pick them. Each file
+  shows its own progress bar; the other side sees it within ~4s.
+- **Manage files** — delete a single file, or clear the whole room.
 
 ## Room lifecycle
 
@@ -184,6 +193,20 @@ lib/storage.js     per-room .meta.json + file lifecycle (serialized writes)
 lib/cleanup.js     idle empty-room removal
 lib/ratelimit.js   tiny in-memory per-IP limiter
 public/            gate.html, index.html, room.html, app.js (client)
+public/glass.css   shared liquid-glass styling
+public/vendor/     liquid-glass.js (MIT, vendored, no CDN)
 test/              node:test suites (one per module + route/gate/qr)
-docs/              design spec, implementation plan, build-harness spec
+docs/              build-harness spec
 ```
+
+## Similar tools
+
+If you want a polished, app-based transfer tool, look at
+[LocalSend](https://localsend.org) or [PairDrop](https://pairdrop.net).
+filedrops is deliberately minimal and browser-only — its one trick is that the
+other end needs nothing but a browser (or a QR scan), which is handy for public or
+borrowed computers where you can't install anything.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "commonjs",
+  "license": "MIT",
+  "description": "A small self-hosted, browser-only file relay behind a passphrase gate.",
   "scripts": {
     "start": "node server.js",
     "test": "node --test"
