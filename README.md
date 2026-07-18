@@ -82,9 +82,16 @@ expose it publicly at your own domain with Cloudflare Tunnel (see
 [Deploy on Windows](#deploy-on-windows-persistent)). This is the only mode that
 needs a tunnel.
 
-> **Firewall (modes 1 & 2):** if other devices can't connect, allow inbound TCP on
-> the port. On Windows (elevated):
+> **Firewall — host only, and only for LAN mode.** Connecting devices *never* need
+> a firewall change; they only make outbound requests. Only the **host** (the
+> machine running filedrops) may need to allow inbound on the port, and only in
+> mode 1 (LAN). Windows usually pops an "Allow access" prompt the first time the
+> server listens — accept it for **Private** networks. If a client's Wi-Fi is
+> treated as **Public** and the connection is blocked, add the rule manually
+> (elevated):
 > `netsh advfirewall firewall add rule name="filedrops" dir=in action=allow protocol=TCP localport=PORT`
+> Cloudflare Tunnel needs no inbound rule at all (cloudflared dials outward), and
+> Tailscale usually works without one too.
 
 ## Environment
 
