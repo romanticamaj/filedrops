@@ -7,6 +7,7 @@
   "description": "A small self-hosted, browser-only file relay behind a passphrase gate.",
   "scripts": {
     "start": "node server.js",
+    "local": "node --env-file=.env server.js",
     "test": "node --test"
   },
   "dependencies": {

@@ -29,21 +29,49 @@ Rooms are folders on disk. Files stay until you remove them. There is no databas
   the uploaded files (named by a random server-generated id) plus a `.meta.json`
   mapping id → original name/size/mime/time.
 
-## Run locally
+## Quick start (run it, share on your LAN)
+
+The most common setup: run filedrops on one machine — your Mac, a Linux box, a
+Windows PC — and let anyone on the same network use it through a browser. Same
+steps on every OS.
 
 ```bash
+git clone https://github.com/romanticamaj/filedrops.git
+cd filedrops
 npm install
-cp .env.example .env   # set ACCESS_PASSPHRASE and COOKIE_SECRET (and SECURE_COOKIE=false for http testing)
-npm start
+cp .env.example .env
 ```
 
-Open http://localhost:3000 → enter the passphrase → create a room or open a
-fixed room URL (`/r/<your-code>`). Drag files in; the other side sees them within
-~4s.
+Edit `.env`: set `ACCESS_PASSPHRASE` and `COOKIE_SECRET`, pick a `PORT` (e.g.
+`5178`), and set `SECURE_COOKIE=false` (required for plain-http LAN use). Then
+start it — `npm run local` loads `.env` via Node's built-in `--env-file`, no
+extra dependency:
 
-> Local http testing: browsers withhold `Secure` cookies over plain http, so set
-> `SECURE_COOKIE=false` when testing on `http://localhost`. In production (behind
-> Cloudflare's HTTPS) leave it `true`.
+```bash
+npm run local
+```
+
+It's now at `http://localhost:<PORT>` on this machine. To use it from another
+device on the same Wi-Fi, share this machine's LAN IP:
+
+| OS | Get your LAN IP | Open on the other device |
+|---|---|---|
+| **macOS** | `ipconfig getifaddr en0` (Wi-Fi; try `en1` if empty) | `http://<ip>:<PORT>` |
+| **Linux** | `hostname -I` | `http://<ip>:<PORT>` |
+| **Windows** | `ipconfig` → IPv4 Address | `http://<ip>:<PORT>` |
+
+Open that URL (or scan a room's QR) on the other device, enter the passphrase,
+and you're in the same room. Drop a file on one side; download it on the other.
+
+**Firewall:** the first time another device connects, your OS may ask whether to
+allow incoming connections for `node` — allow it. macOS shows a dialog (or add it
+under System Settings → Network → Firewall). On a Windows "Public" network you may
+need the rule in [Access modes](#access-modes). The connecting devices never need
+any firewall change.
+
+> `SECURE_COOKIE=false` is required for plain-http LAN use — browsers withhold
+> `Secure` cookies over non-HTTPS. Keep it `true` only when serving over HTTPS
+> (e.g. behind Cloudflare Tunnel).
 
 ## Usage
 
