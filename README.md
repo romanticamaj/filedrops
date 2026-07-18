@@ -5,7 +5,7 @@ its QR — on any other device, and move files both ways, right in the browser. 
 other end installs nothing: no app, no account, no sign-in. Just a shared passphrase.
 
 <p align="center">
-  <img src="docs/screenshots/room-desktop.png" alt="filedrops room on desktop" width="760"><br>
+  <img src="docs/screenshots/demo.gif" alt="filedrops: log in, then files appear in the room" width="760"><br>
   <img src="docs/screenshots/room-mobile.png" alt="the same room in a phone browser" width="220">
 </p>
 
