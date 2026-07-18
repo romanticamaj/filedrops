@@ -3,8 +3,9 @@
 A self-hosted, room-based **ephemeral file relay** behind a single site-wide
 passphrase. Walk up to any computer, open a URL, enter the passphrase, and move
 files between machines in both directions — no accounts, no OAuth, no database.
-Runs as a persistent service on a Windows host and is exposed at
-`drop.example.com` via Cloudflare Tunnel.
+Runs as a persistent service on a Windows host. Reach it over the local network,
+a Tailscale tailnet, or the public internet via Cloudflare Tunnel (see
+[Access modes](#access-modes)).
 
 **Typical use:** at a client site → open the room URL on the on-site PC → enter
 the passphrase → drag a file → your own laptop (in the same room) sees it and
@@ -55,6 +56,35 @@ fixed room URL (`/r/<your-code>`). Drag files in; the other side sees them withi
 - An **empty** room whose folder has been idle longer than `ROOM_IDLE_DAYS`
   (default 7) is removed by an hourly cleanup pass. Rooms with files are never
   auto-removed.
+
+## Access modes
+
+filedrops is just an HTTP server on `localhost:PORT`. A tunnel is only **one** way
+to reach it — pick the mode that fits who needs access and from where. The server
+listens on all interfaces, so modes 1 and 2 need no extra software on the host.
+
+**1. Same network / on-site — no tunnel, no internet.**
+Run it on your laptop on any Wi-Fi (home, coworking space, a client's office).
+Any device on the same network opens `http://<host-ip>:PORT` (find the host IP
+with `ipconfig` on Windows / `ip addr` on Linux). Nothing leaves the local
+network — ideal for moving files around on-site with no internet at all. Bring
+the laptop, join the client's Wi-Fi, and everyone on it can transfer through you.
+
+**2. Your own devices, anywhere — Tailscale, no tunnel.**
+If your machines share a [Tailscale](https://tailscale.com) tailnet, any of them
+reaches `http://<tailscale-ip>:PORT` from anywhere (even on cellular), with no
+public domain and no tunnel. Best when both ends are *your* devices — e.g. your
+phone and your work laptop at a client site.
+
+**3. Anyone with the passphrase — Cloudflare Tunnel, public.**
+To let someone who is *not* on your LAN or tailnet reach it from any browser,
+expose it publicly at your own domain with Cloudflare Tunnel (see
+[Deploy on Windows](#deploy-on-windows-persistent)). This is the only mode that
+needs a tunnel.
+
+> **Firewall (modes 1 & 2):** if other devices can't connect, allow inbound TCP on
+> the port. On Windows (elevated):
+> `netsh advfirewall firewall add rule name="filedrops" dir=in action=allow protocol=TCP localport=PORT`
 
 ## Environment
 
