@@ -51,6 +51,27 @@ extra dependency:
 npm run local
 ```
 
+Prefer not to keep a `.env` file? Pass the vars inline for a one-shot run.
+On **macOS / Linux** (bash/zsh):
+
+```bash
+ACCESS_PASSPHRASE=your-passphrase SECURE_COOKIE=false PORT=5178 \
+  COOKIE_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))") \
+  node server.js
+```
+
+On **Windows PowerShell** (the `VAR=value cmd` form above is bash-only):
+
+```powershell
+$env:ACCESS_PASSPHRASE='your-passphrase'; $env:SECURE_COOKIE='false'; $env:PORT='5178'
+$env:COOKIE_SECRET=(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+node server.js
+```
+
+> Inline secrets land in your shell history, and a freshly generated
+> `COOKIE_SECRET` logs everyone out on each restart — fine for a quick test; use
+> `.env` for anything you run repeatedly.
+
 It's now at `http://localhost:<PORT>` on this machine. To use it from another
 device on the same Wi-Fi, share this machine's LAN IP:
 
