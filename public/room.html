@@ -21,6 +21,18 @@
     #drop .big { font-size: 17px; color: var(--txt); margin-bottom: 4px; font-weight: 600; }
     #drop.over { color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset, var(--glass-shadow); }
     #drop.busy { opacity: .5; pointer-events: none; }
+    #uploads { display: grid; gap: 10px; margin-bottom: 20px; }
+    #uploads:empty { display: none; }
+    .up { padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .up-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 8px; }
+    .up-name { color: var(--txt); word-break: break-all; }
+    .up-pct { color: var(--accent); flex: none; font-variant-numeric: tabular-nums; }
+    .up-track { height: 6px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; }
+    .up-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #38bdf8, #6366f1); transition: width .15s ease; }
+    .up.done .up-fill { background: linear-gradient(90deg, #34d399, #10b981); }
+    .up.done .up-pct { color: #34d399; }
+    .up.failed .up-fill { background: linear-gradient(90deg, #f87171, #ef4444); }
+    .up.failed .up-pct { color: #fca5a5; }
     ul#list { list-style: none; padding: 8px 12px; margin: 0; }
     #list li { display: flex; align-items: center; gap: 12px; padding: 13px 8px; border-bottom: 1px solid rgba(255,255,255,.1); }
     #list li:last-child { border-bottom: none; }
@@ -52,6 +64,8 @@
       或點擊選檔上傳
     </div>
     <input id="picker" type="file" multiple hidden>
+
+    <div id="uploads"></div>
 
     <ul id="list" class="glass"></ul>
   </div>
