@@ -143,6 +143,23 @@ needs a tunnel.
 | `COOKIE_MAX_AGE_DAYS` | 90 | Auth cookie lifetime |
 | `SECURE_COOKIE` | true | Marks the auth cookie `Secure` (HTTPS-only); set `false` only for local http testing |
 
+### Secrets: `ACCESS_PASSPHRASE` vs `COOKIE_SECRET`
+
+Both are required, but they play different roles:
+
+- **`ACCESS_PASSPHRASE`** — the gate passphrase people type to get in. You choose
+  it, remember it, and share it with anyone you let in. Make it long enough not to
+  guess. This is the only secret a human ever handles.
+- **`COOKIE_SECRET`** — a server-side key that signs the login cookie (HMAC), so
+  the server can tell a genuine login from a forged one. Nobody types it; it just
+  needs to be a random, secret string. Generate one with:
+  ```bash
+  node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  ```
+  Changing it invalidates every existing login cookie — everyone re-enters the
+  passphrase once. Leaking it lets someone forge a login and bypass the passphrase,
+  so keep it out of the repo (it lives in `.env`, which is git-ignored).
+
 ## Deploy on Windows (persistent)
 
 ### 1. Cloudflare Tunnel
