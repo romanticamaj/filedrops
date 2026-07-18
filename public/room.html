@@ -36,12 +36,19 @@
     ul#list { list-style: none; padding: 8px 12px; margin: 0; }
     #list li { display: flex; align-items: center; gap: 12px; padding: 13px 8px; border-bottom: 1px solid rgba(255,255,255,.1); }
     #list li:last-child { border-bottom: none; }
-    #list a { color: var(--accent); text-decoration: none; flex: 1; word-break: break-all; font-weight: 500; }
+    #list a { color: var(--accent); text-decoration: none; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
     #list a:hover { text-decoration: underline; }
     #list .meta { color: var(--muted); font-size: 12px; flex: none; }
     #list li button { border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06); color: var(--txt); border-radius: 10px; padding: 5px 11px; cursor: pointer; font-size: 13px; transition: background .15s; }
     #list li button:hover { background: rgba(248,113,113,.28); border-color: rgba(248,113,113,.5); }
     #list .empty { color: var(--muted); justify-content: center; font-size: 14px; }
+    @media (max-width: 520px) {
+      /* stack the row: filename on its own line, size + delete beneath */
+      #list li { flex-wrap: wrap; row-gap: 6px; }
+      #list a { flex-basis: 100%; white-space: normal; word-break: break-word; }
+      #list .meta { order: 2; }
+      #list li button { order: 3; margin-left: auto; }
+    }
   </style>
 </head>
 <body>

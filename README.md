@@ -4,6 +4,11 @@ A small self-hosted file relay. Run it on one machine; open a room URL — or sc
 its QR — on any other device, and move files both ways, right in the browser. The
 other end installs nothing: no app, no account, no sign-in. Just a shared passphrase.
 
+<p align="center">
+  <img src="docs/screenshots/room-desktop.png" alt="filedrops room on desktop" width="760"><br>
+  <img src="docs/screenshots/room-mobile.png" alt="the same room in a phone browser" width="220">
+</p>
+
 ## The idea
 
 Keep filedrops running on a machine you control — a laptop, a home server, or a
