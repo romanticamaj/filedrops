@@ -5,40 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>filedrops room</title>
+  <link rel="stylesheet" href="/glass.css">
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; background: #111; color: #eee; }
-    header { display: flex; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid #333; flex-wrap: wrap; }
-    header img { width: 96px; height: 96px; background: #fff; border-radius: 8px; }
-    .url { font-family: monospace; word-break: break-all; }
-    main { padding: 16px; max-width: 720px; margin: 0 auto; }
-    #drop { border: 2px dashed #555; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; color: #aaa; }
-    #drop.over { border-color: #3b82f6; color: #3b82f6; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 56px; }
+    header.card { display: flex; gap: 18px; align-items: center; padding: 18px; margin-bottom: 20px; flex-wrap: wrap; }
+    .qrtile { width: 96px; height: 96px; border-radius: 16px; background: #fff; padding: 6px; flex: none; box-shadow: 0 8px 22px rgba(0,0,0,.4); }
+    .qrtile img { width: 100%; height: 100%; display: block; border-radius: 10px; }
+    .meta { flex: 1; min-width: 200px; }
+    .code { font-size: 15px; color: var(--muted); margin-bottom: 4px; }
+    .code b { font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--accent); margin-left: 6px; }
+    .url { font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 13px; color: var(--muted); word-break: break-all; opacity: .85; }
+    .sub { color: var(--muted); font-size: 12px; margin-top: 5px; }
+    .bar { display: flex; gap: 8px; margin-top: 12px; }
+    #drop { padding: 46px 20px; text-align: center; color: var(--muted); cursor: pointer; margin-bottom: 20px; transition: box-shadow .2s ease, color .2s ease; }
+    #drop .big { font-size: 17px; color: var(--txt); margin-bottom: 4px; font-weight: 600; }
+    #drop.over { color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset, var(--glass-shadow); }
     #drop.busy { opacity: .5; pointer-events: none; }
-    ul { list-style: none; padding: 0; }
-    li { display: flex; align-items: center; gap: 12px; padding: 10px; border-bottom: 1px solid #2a2a2a; }
-    li a { color: #60a5fa; text-decoration: none; flex: 1; word-break: break-all; }
-    li .meta { color: #888; font-size: 13px; }
-    li button, #clear, #logout { background: #333; color: #eee; border: 1px solid #444; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
-    .empty { color: #666; justify-content: center; }
-    .bar { display: flex; gap: 8px; margin: 12px 0; }
+    ul#list { list-style: none; padding: 8px 12px; margin: 0; }
+    #list li { display: flex; align-items: center; gap: 12px; padding: 13px 8px; border-bottom: 1px solid rgba(255,255,255,.1); }
+    #list li:last-child { border-bottom: none; }
+    #list a { color: var(--accent); text-decoration: none; flex: 1; word-break: break-all; font-weight: 500; }
+    #list a:hover { text-decoration: underline; }
+    #list .meta { color: var(--muted); font-size: 12px; flex: none; }
+    #list li button { border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06); color: var(--txt); border-radius: 10px; padding: 5px 11px; cursor: pointer; font-size: 13px; transition: background .15s; }
+    #list li button:hover { background: rgba(248,113,113,.28); border-color: rgba(248,113,113,.5); }
+    #list .empty { color: var(--muted); justify-content: center; font-size: 14px; }
   </style>
 </head>
 <body>
-  <header>
-    <img id="qr" alt="QR">
-    <div>
-      <div class="url" id="roomUrl"></div>
-      <div class="bar">
-        <form method="POST" action="/logout" style="margin:0"><button id="logout" type="submit">登出</button></form>
-        <button id="clear">清空房間</button>
+  <div class="wrap">
+    <header class="card glass">
+      <div class="qrtile"><img id="qr" alt="QR"></div>
+      <div class="meta">
+        <div class="code">房間碼<b id="roomCode">—</b></div>
+        <div class="url" id="roomUrl"></div>
+        <div class="sub">同一個房間網址 = 同一個資料夾,兩邊即時互通</div>
+        <div class="bar">
+          <form method="POST" action="/logout" style="margin:0"><button class="pill" id="logout" type="submit">登出</button></form>
+          <button class="pill" id="clear">清空房間</button>
+        </div>
       </div>
+    </header>
+
+    <div id="drop" class="glass">
+      <div class="big">拖拉檔案到這裡</div>
+      或點擊選檔上傳
     </div>
-  </header>
-  <main>
-    <div id="drop">拖拉檔案到這裡,或點擊選檔上傳</div>
     <input id="picker" type="file" multiple hidden>
-    <ul id="list"></ul>
-  </main>
+
+    <ul id="list" class="glass"></ul>
+  </div>
+
+  <script src="/vendor/liquid-glass.js"></script>
+  <script>
+    (function () {
+      var codeEl = document.getElementById('roomCode');
+      if (codeEl) codeEl.textContent = decodeURIComponent(location.pathname.split('/').pop() || '');
+      if (!window.liquidGlass) return;
+      document.querySelectorAll('.glass').forEach(function (el) {
+        liquidGlass(el, { blur: 3, saturate: 1.6 });
+      });
+    })();
+  </script>
   <script src="/app.js"></script>
 </body>
 </html>

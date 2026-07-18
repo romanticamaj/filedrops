@@ -1,0 +1,83 @@
+/* glass.css — shared liquid-glass aesthetic for filedrops (authed pages) */
+:root {
+  --txt: #eef1f7;
+  --muted: #a7adbd;
+  --accent: #7dd3fc;
+  --glass-tint: linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+  --glass-border: 1px solid rgba(255,255,255,.22);
+  --glass-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.45);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
+  color: var(--txt);
+  background: #070711;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated aurora backdrop — gives the glass something vivid to refract. */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  inset: -30vmax;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(38vmax 38vmax at 18% 22%, rgba(56,189,248,.55), transparent 60%),
+    radial-gradient(34vmax 34vmax at 82% 26%, rgba(167,139,250,.50), transparent 60%),
+    radial-gradient(40vmax 40vmax at 50% 90%, rgba(244,114,182,.42), transparent 60%);
+  filter: blur(8px) saturate(1.2);
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+body::after {
+  animation-duration: 34s;
+  animation-direction: alternate-reverse;
+  opacity: .65;
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(-4%, -3%, 0) scale(1.05) rotate(0deg); }
+  to   { transform: translate3d(5%, 4%, 0) scale(1.16) rotate(8deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after { animation: none; }
+}
+
+/* Glass panel. liquid-glass.js sets backdrop-filter (real refraction on
+   Chromium, frosted fallback elsewhere via .lg-fallback). */
+.glass {
+  position: relative;
+  background: var(--glass-tint);
+  border: var(--glass-border);
+  border-radius: 26px;
+  box-shadow: var(--glass-shadow);
+}
+.glass::before { /* specular top glare */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.35), transparent 42%);
+  mix-blend-mode: screen;
+  opacity: .5;
+}
+.lg-fallback { background: linear-gradient(160deg, rgba(255,255,255,.12), rgba(255,255,255,.03)); }
+
+.pill {
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.08);
+  color: var(--txt);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 15px;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background .15s ease, transform .15s ease;
+}
+.pill:hover { background: rgba(255,255,255,.17); }
+.pill:active { transform: translateY(1px); }

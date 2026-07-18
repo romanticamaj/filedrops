@@ -11,3 +11,4 @@ data/
 
 # Build-process docs (design spec + plan) — kept local, not published
 docs/superpowers/
+.gstack/

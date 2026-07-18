@@ -6,12 +6,57 @@
   <meta name="robots" content="noindex">
   <title>filedrops</title>
   <style>
-    body { font-family: system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; margin: 0; background: #111; color: #eee; }
-    form { display: grid; gap: 12px; width: min(320px, 90vw); }
-    input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #444; }
-    input { background: #222; color: #eee; }
-    button { background: #3b82f6; color: #fff; border: none; cursor: pointer; }
-    .err { color: #f87171; min-height: 1.2em; }
+    /* Self-contained: the gate is served before auth, so no external assets. */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; min-height: 100vh; overflow: hidden;
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
+      color: #eef1f7; background: #070711;
+      display: grid; place-items: center; padding: 24px;
+    }
+    body::before, body::after {
+      content: ""; position: fixed; inset: -30vmax; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(38vmax 38vmax at 20% 24%, rgba(56,189,248,.55), transparent 60%),
+        radial-gradient(34vmax 34vmax at 80% 26%, rgba(167,139,250,.50), transparent 60%),
+        radial-gradient(40vmax 40vmax at 50% 92%, rgba(244,114,182,.42), transparent 60%);
+      filter: blur(8px) saturate(1.2);
+      animation: drift 28s ease-in-out infinite alternate;
+    }
+    body::after { animation-duration: 36s; animation-direction: alternate-reverse; opacity: .65; }
+    @keyframes drift {
+      from { transform: translate3d(-4%,-3%,0) scale(1.05) rotate(0deg); }
+      to   { transform: translate3d(5%,4%,0) scale(1.16) rotate(8deg); }
+    }
+    @media (prefers-reduced-motion: reduce) { body::before, body::after { animation: none; } }
+
+    form {
+      position: relative;
+      display: grid; gap: 14px; width: min(340px, 90vw);
+      padding: 34px 28px; border-radius: 26px;
+      background: linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.45);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      backdrop-filter: blur(18px) saturate(1.6);
+    }
+    form::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,.35), transparent 42%);
+      mix-blend-mode: screen; opacity: .5;
+    }
+    h1 { margin: 0 0 2px; text-align: center; font-size: 28px; letter-spacing: .5px; }
+    input, button { padding: 13px 14px; font-size: 16px; border-radius: 12px; }
+    input {
+      border: 1px solid rgba(255,255,255,.22); color: #eef1f7;
+      background: rgba(255,255,255,.06);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    }
+    input::placeholder { color: #a7adbd; }
+    button { border: none; cursor: pointer; color: #fff; font-weight: 600;
+      background: linear-gradient(180deg, #38bdf8, #6366f1); }
+    .err { color: #fca5a5; min-height: 1.2em; text-align: center; font-size: 14px; }
   </style>
 </head>
 <body>

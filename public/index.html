@@ -5,22 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>filedrops</title>
+  <link rel="stylesheet" href="/glass.css">
   <style>
-    body { font-family: system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; margin: 0; background: #111; color: #eee; gap: 16px; }
-    form { display: grid; gap: 10px; width: min(360px, 90vw); }
-    input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #444; }
-    input { background: #222; color: #eee; }
-    button { background: #3b82f6; color: #fff; border: none; cursor: pointer; }
-    .hint { color: #888; font-size: 14px; text-align: center; }
+    body { display: grid; place-items: center; padding: 24px; }
+    .card { width: min(400px, 92vw); padding: 32px 28px; display: grid; gap: 16px; text-align: center; }
+    h1 { margin: 0 0 4px; font-size: 30px; letter-spacing: .5px; }
+    form { display: grid; gap: 10px; margin: 0; }
+    .field { width: 100%; padding: 12px 14px; font-size: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.06); color: var(--txt); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .field::placeholder { color: var(--muted); }
+    .primary { background: linear-gradient(180deg, #38bdf8, #6366f1); border: none; color: #fff; font-weight: 600; }
+    .divider { color: var(--muted); font-size: 12px; margin: 2px 0; }
   </style>
 </head>
 <body>
-  <h1>filedrops</h1>
-  <form method="POST" action="/new"><button type="submit">建立新房間</button></form>
-  <form method="GET" id="go" onsubmit="location.href='/r/'+encodeURIComponent(this.code.value.trim());return false;">
-    <input name="code" placeholder="或輸入房間碼 / 常用房間" autocomplete="off">
-    <button type="submit">前往</button>
-  </form>
-  <div class="hint">建立隨機房間,或直接輸入你的固定房間碼。</div>
+  <div class="card glass">
+    <h1>filedrops</h1>
+    <form method="POST" action="/new"><button class="field primary" type="submit">建立新房間</button></form>
+    <div class="divider">— 或 —</div>
+    <form method="GET" id="go" onsubmit="location.href='/r/'+encodeURIComponent(this.code.value.trim());return false;">
+      <input class="field" name="code" placeholder="輸入房間碼 / 常用房間" autocomplete="off">
+      <button class="field pill" type="submit">前往</button>
+    </form>
+  </div>
+
+  <script src="/vendor/liquid-glass.js"></script>
+  <script>
+    (function () {
+      if (window.liquidGlass) liquidGlass(document.querySelector('.card'), { blur: 4, saturate: 1.6 });
+    })();
+  </script>
 </body>
 </html>
