@@ -48,6 +48,7 @@ lib/storage.js   ensureRoom, newFileId, addFileMeta, listFiles, getFile, deleteF
                  clearRoom. Per-room .meta.json; writes serialized via withRoomLock.
 lib/cleanup.js   cleanupIdleRooms — removes empty rooms idle > ROOM_IDLE_DAYS
 lib/ratelimit.js rateLimiter({windowMs,max}) — in-memory per-IP
+lib/addresses.js reachableUrls(port) — Local/Network/Tailscale URLs for the startup banner
 public/          gate.html, index.html, room.html, app.js (client: poll, drag-drop, QR)
 ```
 

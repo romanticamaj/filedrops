@@ -3,6 +3,7 @@ const fs = require('fs');
 const { loadConfig } = require('./lib/config');
 const { createApp } = require('./app');
 const { cleanupIdleRooms } = require('./lib/cleanup');
+const { reachableUrls } = require('./lib/addresses');
 
 const config = loadConfig();
 fs.mkdirSync(config.dataDir, { recursive: true });
@@ -16,5 +17,11 @@ setInterval(() => {
 }, HOUR).unref();
 
 app.listen(config.port, () => {
-  console.log(`filedrops listening on http://localhost:${config.port}`);
+  const urls = reachableUrls(config.port);
+  const pad = Math.max(...urls.map((u) => u.label.length));
+  console.log('\nfiledrops is running — open one of these (passphrase required):\n');
+  for (const { label, url } of urls) {
+    console.log(`  ${label.padEnd(pad)}   ${url}`);
+  }
+  console.log('\nShare the Network or Tailscale URL — not localhost — so other devices can reach it.\n');
 });

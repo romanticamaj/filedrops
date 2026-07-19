@@ -77,14 +77,25 @@ node server.js
 > `COOKIE_SECRET` logs everyone out on each restart — fine for a quick test; use
 > `.env` for anything you run repeatedly.
 
-It's now at `http://localhost:<PORT>` on this machine. To use it from another
-device on the same Wi-Fi, share this machine's LAN IP:
+On startup filedrops prints every URL it can be reached at — **Local**,
+**Network** (your LAN IP), and **Tailscale** if present:
 
-| OS | Get your LAN IP | Open on the other device |
-|---|---|---|
-| **macOS** | `ipconfig getifaddr en0` (Wi-Fi; try `en1` if empty) | `http://<ip>:<PORT>` |
-| **Linux** | `hostname -I` | `http://<ip>:<PORT>` |
-| **Windows** | `ipconfig` → IPv4 Address | `http://<ip>:<PORT>` |
+```
+filedrops is running — open one of these (passphrase required):
+
+  Local       http://localhost:5178
+  Network     http://192.168.1.23:5178
+  Tailscale   http://100.x.y.z:5178
+```
+
+Share the **Network** or **Tailscale** URL (not `localhost`) so other devices can
+open it. To look the IP up yourself instead:
+
+| OS | Get your LAN IP |
+|---|---|
+| **macOS** | `ipconfig getifaddr en0` (Wi-Fi; try `en1` if empty) |
+| **Linux** | `hostname -I` |
+| **Windows** | `ipconfig` → IPv4 Address |
 
 Open that URL (or scan a room's QR) on the other device, enter the passphrase,
 and you're in the same room. Drop a file on one side; download it on the other.
@@ -263,6 +274,7 @@ lib/rooms.js       room-code generation + path-traversal-safe roomDir()
 lib/storage.js     per-room .meta.json + file lifecycle (serialized writes)
 lib/cleanup.js     idle empty-room removal
 lib/ratelimit.js   tiny in-memory per-IP limiter
+lib/addresses.js   reachable URLs (Local / Network / Tailscale) for the banner
 public/            gate.html, index.html, room.html, app.js (client)
 public/glass.css   shared liquid-glass styling
 public/vendor/     liquid-glass.js (MIT, vendored, no CDN)
