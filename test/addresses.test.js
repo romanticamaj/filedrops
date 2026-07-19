@@ -16,12 +16,12 @@ test('labels LAN and Tailscale IPv4, skips internal + IPv6', () => {
       { address: '192.168.1.23', family: 'IPv4', internal: false },
       { address: 'fe80::1', family: 'IPv6', internal: false },
     ],
-    tailscale0: [{ address: '100.106.118.45', family: 'IPv4', internal: false }],
+    tailscale0: [{ address: '100.100.0.1', family: 'IPv4', internal: false }],
   };
   assert.deepStrictEqual(reachableUrls(5178, ifaces), [
     { label: 'Local', url: 'http://localhost:5178' },
     { label: 'Network', url: 'http://192.168.1.23:5178' },
-    { label: 'Tailscale', url: 'http://100.106.118.45:5178' },
+    { label: 'Tailscale', url: 'http://100.100.0.1:5178' },
   ]);
 });
 
