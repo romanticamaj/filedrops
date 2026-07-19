@@ -17,11 +17,16 @@ setInterval(() => {
 }, HOUR).unref();
 
 app.listen(config.port, () => {
-  const urls = reachableUrls(config.port);
-  const pad = Math.max(...urls.map((u) => u.label.length));
-  console.log('\nfiledrops is running — open one of these (passphrase required):\n');
-  for (const { label, url } of urls) {
-    console.log(`  ${label.padEnd(pad)}   ${url}`);
+  const shareable = reachableUrls(config.port).filter((u) => u.label !== 'Local');
+  console.log('\nfiledrops is running.\n');
+  if (shareable.length) {
+    console.log('Open on any device (passphrase required):\n');
+    const pad = Math.max(...shareable.map((u) => u.label.length));
+    for (const { label, url } of shareable) {
+      console.log(`  ${label.padEnd(pad)}   ${url}`);
+    }
+    console.log('\nUse one of these on this machine too, so the room QR is scannable by others.\n');
+  } else {
+    console.log(`No network address found — reachable on this machine only:\n\n  http://localhost:${config.port}\n`);
   }
-  console.log('\nShare the Network or Tailscale URL — not localhost — so other devices can reach it.\n');
 });

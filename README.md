@@ -77,19 +77,20 @@ node server.js
 > `COOKIE_SECRET` logs everyone out on each restart — fine for a quick test; use
 > `.env` for anything you run repeatedly.
 
-On startup filedrops prints every URL it can be reached at — **Local**,
-**Network** (your LAN IP), and **Tailscale** if present:
+On startup filedrops prints the URLs other devices can actually use — your
+**Network** (LAN) address and **Tailscale** address if present:
 
 ```
-filedrops is running — open one of these (passphrase required):
+filedrops is running.
 
-  Local       http://localhost:5178
-  Network     http://192.168.1.23:5178
+Open on any device (passphrase required):
+
   Tailscale   http://100.x.y.z:5178
+  Network     http://192.168.1.23:5178
 ```
 
-Share the **Network** or **Tailscale** URL (not `localhost`) so other devices can
-open it. To look the IP up yourself instead:
+Open one of these on the host machine too — **not** `localhost` — so the room's QR
+encodes a shareable address other devices can scan. To look the IP up yourself:
 
 | OS | Get your LAN IP |
 |---|---|
