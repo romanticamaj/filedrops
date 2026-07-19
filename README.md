@@ -85,12 +85,17 @@ filedrops is running.
 
 Open on any device (passphrase required):
 
-  Tailscale   http://100.x.y.z:5178
-  Network     http://192.168.1.23:5178
+  Network     http://192.168.1.23:5178   Wi-Fi
+  Tailscale   http://100.x.y.z:5178      Tailscale
+
+Pick the Wi-Fi / Ethernet one (not a VirtualBox/WSL/hotspot adapter).
 ```
 
-Open one of these on the host machine too — **not** `localhost` — so the room's QR
-encodes a shareable address other devices can scan. To look the IP up yourself:
+The last column is the network adapter. Pick your real **Wi-Fi** or **Ethernet**
+one — a `192.168.x.1` on a VirtualBox / WSL / hotspot adapter is a separate virtual
+subnet other devices can't reach. Open the chosen URL on the host machine too
+(**not** `localhost`) so the room's QR encodes a shareable address. To look the IP
+up yourself instead:
 
 | OS | Get your LAN IP |
 |---|---|
