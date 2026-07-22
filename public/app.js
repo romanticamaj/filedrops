@@ -1,4 +1,8 @@
 // public/app.js
+// The server renders this page per language and inlines the dictionary as a
+// JSON island, so there is no fetch and no flash of untranslated text.
+const I18N = JSON.parse(document.getElementById('i18n').textContent);
+const t = (k) => I18N[k] ?? k;
 const code = location.pathname.split('/').pop();
 const base = `/r/${code}`;
 const list = document.getElementById('list');
@@ -17,7 +21,7 @@ async function refresh() {
   const res = await fetch(`${base}/list`, { headers: { Accept: 'application/json' } });
   const { files } = await res.json();
   list.innerHTML = '';
-  if (!files.length) { list.innerHTML = '<li class="empty">尚無檔案</li>'; return; }
+  if (!files.length) { list.innerHTML = `<li class="empty">${t('list.empty')}</li>`; return; }
   for (const f of files) {
     const li = document.createElement('li');
     const a = document.createElement('a');
@@ -27,7 +31,7 @@ async function refresh() {
     meta.className = 'meta';
     meta.textContent = fmtSize(f.size);
     const del = document.createElement('button');
-    del.textContent = '刪除';
+    del.textContent = t('list.delete');
     del.onclick = async () => {
       await fetch(`${base}/delete/${f.id}`, { method: 'POST', headers: { Accept: 'application/json' } });
       refresh();
@@ -82,14 +86,14 @@ function uploadOne(file) {
   xhr.addEventListener('load', () => {
     if (xhr.status >= 200 && xhr.status < 300) {
       fill.style.width = '100%';
-      pct.textContent = '完成';
+      pct.textContent = t('upload.done');
       row.classList.add('done');
       setTimeout(() => { row.remove(); refresh(); }, 500);
     } else {
-      fail(xhr.status === 413 ? '檔案太大' : '上傳失敗');
+      fail(xhr.status === 413 ? t('upload.toobig') : t('upload.failed'));
     }
   });
-  xhr.addEventListener('error', () => fail('連線錯誤'));
+  xhr.addEventListener('error', () => fail(t('upload.neterror')));
 
   const fd = new FormData();
   fd.append('files', file);

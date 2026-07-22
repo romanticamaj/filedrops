@@ -54,8 +54,14 @@ test('logout clears the cookie', async () => {
   assert.strictEqual(res.headers.location, '/gate');
 });
 
-test('wrong passphrase page shows the error message', async () => {
+test('wrong passphrase page shows the error message (English default)', async () => {
   const res = await request(app).post('/gate').type('form').send({ passphrase: 'nope' });
+  assert.strictEqual(res.status, 401);
+  assert.match(res.text, /Wrong passphrase/);
+});
+
+test('wrong passphrase page answers in the language the form posted', async () => {
+  const res = await request(app).post('/gate').type('form').send({ passphrase: 'nope', lang: 'zh-Hant' });
   assert.strictEqual(res.status, 401);
   assert.match(res.text, /通關碼錯誤/);
 });

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="{{lang.tag}}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,13 +57,17 @@
     button { border: none; cursor: pointer; color: #fff; font-weight: 600;
       background: linear-gradient(180deg, #38bdf8, #6366f1); }
     .err { color: #fca5a5; min-height: 1.2em; text-align: center; font-size: 14px; }
+    .lang { position: fixed; top: 16px; right: 20px; font-size: 14px; color: #a7adbd; text-decoration: none; }
+    .lang:hover { color: #eef1f7; text-decoration: underline; }
   </style>
 </head>
 <body>
+  <a class="lang" href="{{@switchhref}}" hreflang="{{lang.other.tag}}" lang="{{lang.other.tag}}">{{lang.other.name}}</a>
   <form method="POST" action="/gate">
     <h1>filedrops</h1>
-    <input type="password" name="passphrase" placeholder="通關碼" autofocus autocomplete="current-password">
-    <button type="submit">進入</button>
+    <input type="password" name="passphrase" placeholder="{{gate.passphrase}}" autofocus autocomplete="current-password">
+    <button type="submit">{{gate.submit}}</button>
+    <input type="hidden" name="lang" value="{{lang.tag}}">
     <div class="err" id="err"></div>
   </form>
 </body>

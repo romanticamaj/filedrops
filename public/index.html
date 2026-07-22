@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="{{lang.tag}}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,16 +15,19 @@
     .field::placeholder { color: var(--muted); }
     .primary { background: linear-gradient(180deg, #38bdf8, #6366f1); border: none; color: #fff; font-weight: 600; }
     .divider { color: var(--muted); font-size: 12px; margin: 2px 0; }
+    .lang { position: fixed; top: 16px; right: 20px; font-size: 14px; color: var(--muted); text-decoration: none; }
+    .lang:hover { color: var(--txt); text-decoration: underline; }
   </style>
 </head>
 <body>
+  <a class="lang" href="{{@switchhref}}" hreflang="{{lang.other.tag}}" lang="{{lang.other.tag}}">{{lang.other.name}}</a>
   <div class="card glass">
     <h1>filedrops</h1>
-    <form method="POST" action="/new"><button class="field primary" type="submit">建立新房間</button></form>
-    <div class="divider">— 或 —</div>
+    <form method="POST" action="/new"><button class="field primary" type="submit">{{home.new}}</button></form>
+    <div class="divider">{{home.or}}</div>
     <form method="GET" id="go" onsubmit="location.href='/r/'+encodeURIComponent(this.code.value.trim());return false;">
-      <input class="field" name="code" placeholder="輸入房間碼 / 常用房間" autocomplete="off">
-      <button class="field pill" type="submit">前往</button>
+      <input class="field" name="code" placeholder="{{home.code.placeholder}}" autocomplete="off">
+      <button class="field pill" type="submit">{{home.go}}</button>
     </form>
   </div>
 
