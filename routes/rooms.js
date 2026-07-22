@@ -1,11 +1,13 @@
 // routes/rooms.js
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const multer = require('multer');
 const QRCode = require('qrcode');
 const storage = require('../lib/storage');
 const { generateRoomCode, isValidRoomCode } = require('../lib/rooms');
 const { rateLimiter } = require('../lib/ratelimit');
+const { LANGS, DICT, t, render, pickLang, switchHref } = require('../lib/i18n');
 
 function contentDisposition(name) {
   const ascii = name.replace(/[^\x20-\x7e]/g, '_').replace(/["\\]/g, '_');
@@ -23,6 +25,30 @@ function decodeOriginalName(name) {
 
 function roomsRouter(config) {
   const router = express.Router();
+  const langCookie = config.langCookie || 'fd_lang';
+
+  // lang -> { index, room }: both app pages are rendered once per language at
+  // boot. The dictionary the client script needs at runtime is inlined as a
+  // JSON island ({{@dict}}), so the page never fetches translations. Editing
+  // the HTML templates now needs a server restart to show up.
+  const PAGES = {};
+  for (const lang of LANGS) {
+    const dict = JSON.stringify(DICT[lang]).replace(/</g, '\\u003c');
+    PAGES[lang] = {};
+    for (const name of ['index', 'room']) {
+      const tpl = fs.readFileSync(path.join(__dirname, '..', 'public', `${name}.html`), 'utf8');
+      PAGES[lang][name] = render(tpl, lang).replace('{{@dict}}', () => dict);
+    }
+  }
+
+  // {{@switchhref}} is per request: the switcher links to the URL the visitor
+  // is on, with ?lang= set to the other language.
+  const page = (req, name) => {
+    const lang = pickLang(req, langCookie);
+    return PAGES[lang][name].replace('{{@switchhref}}', () => switchHref(req.originalUrl, lang));
+  };
+
+  const notFound = (req, res) => res.status(404).send(t(pickLang(req, langCookie), 'err.notfound'));
 
   const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -46,16 +72,16 @@ function roomsRouter(config) {
   });
 
   const validCode = (req, res, next) => {
-    if (!isValidRoomCode(req.params.code)) return res.status(404).send('not found');
+    if (!isValidRoomCode(req.params.code)) return notFound(req, res);
     next();
   };
 
-  router.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
+  router.get('/', (req, res) => res.type('html').send(page(req, 'index')));
 
   router.post('/new', (req, res) => res.redirect(`/r/${generateRoomCode()}`));
 
   router.get('/r/:code', validCode, (req, res) =>
-    res.sendFile(path.join(__dirname, '..', 'public', 'room.html')));
+    res.type('html').send(page(req, 'room')));
 
   router.get('/r/:code/list', validCode, wrap(async (req, res) => {
     res.json({ files: await storage.listFiles(config.dataDir, req.params.code) });
@@ -73,7 +99,7 @@ function roomsRouter(config) {
 
   router.get('/r/:code/file/:id', validCode, wrap(async (req, res) => {
     const f = await storage.getFile(config.dataDir, req.params.code, req.params.id);
-    if (!f) return res.status(404).send('not found');
+    if (!f) return notFound(req, res);
     res.setHeader('Content-Type', f.mime);
     res.setHeader('Content-Disposition', contentDisposition(f.name));
     res.setHeader('X-Content-Type-Options', 'nosniff');

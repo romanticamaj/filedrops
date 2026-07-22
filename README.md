@@ -20,8 +20,8 @@ a web page, the only thing the other device needs is a browser.
 
 Rooms are folders on disk. Files stay until you remove them. There is no database.
 
-> The web UI is in Traditional Chinese; the server code and this README are in
-> English, so it is easy to fork and relabel.
+> The web UI speaks English and Traditional Chinese; every page has a one-click
+> language switcher. See [Languages](#languages).
 
 ## How it works
 
@@ -129,6 +129,29 @@ any firewall change.
   shows its own progress bar; the other side sees it within ~4s.
 - **Manage files** — delete a single file, or clear the whole room.
 
+## Languages
+
+The UI ships in English (`en`, default) and Traditional Chinese (`zh-Hant`).
+The language is resolved per request, first match wins:
+
+1. `?lang=en` / `?lang=zh-Hant` in the URL. The choice is stored in a cookie
+   and the parameter is stripped with a redirect, so a copied room URL never
+   forces a language on whoever you paste it to.
+2. The language cookie (`LANG_COOKIE`, default `fd_lang`).
+3. The browser's `Accept-Language` header (`zh`, `zh-TW`, `zh-HK`, `zh-MO` and
+   `zh-Hant` map to Traditional Chinese).
+4. English.
+
+The switcher in the top-right corner of every page is a plain link, so it works
+with JavaScript disabled, including on the passphrase gate. Pages are rendered
+per language once at server start; if you edit the HTML under `public/`,
+restart the server to see the change.
+
+To add a language: copy `locales/en.json` to `locales/<tag>.json`, translate
+the values (same keys), add the tag to `LANGS` in `lib/i18n.js` and the file to
+its `DICT`, map the browser tags you want in `fromAccept()`, and turn the
+single switcher anchor into one link per other language.
+
 ## Room lifecycle
 
 - Files persist until you delete them or clear the room — nothing auto-expires
@@ -185,6 +208,8 @@ needs a tunnel.
 | `ROOM_IDLE_DAYS` | 7 | Empty rooms older than this are auto-removed |
 | `COOKIE_MAX_AGE_DAYS` | 90 | Auth cookie lifetime |
 | `SECURE_COOKIE` | true | Marks the auth cookie `Secure` (HTTPS-only); set `false` only for local http testing |
+| `LANG_COOKIE` | fd_lang | Name of the cookie that remembers the language choice |
+| `LANG_COOKIE_DOMAIN` | (unset) | `Domain` attribute for that cookie; leave unset for host-only |
 
 ### Secrets: `ACCESS_PASSPHRASE` vs `COOKIE_SECRET`
 
@@ -265,7 +290,7 @@ https://drop.example.com — it should prompt for the passphrase over HTTPS.
 ## Testing
 
 ```bash
-npm test        # node --test — 48 tests, no external services
+npm test        # node --test — 65 tests, no external services
 ```
 
 ## Project layout
@@ -280,6 +305,8 @@ lib/rooms.js       room-code generation + path-traversal-safe roomDir()
 lib/storage.js     per-room .meta.json + file lifecycle (serialized writes)
 lib/cleanup.js     idle empty-room removal
 lib/ratelimit.js   tiny in-memory per-IP limiter
+lib/i18n.js        flat-JSON locale lookup + {{key}} template render + language pick
+locales/           en.json, zh-Hant.json (one flat object per language)
 lib/addresses.js   reachable URLs (Local / Network / Tailscale) for the banner
 public/            gate.html, index.html, room.html, app.js (client)
 public/glass.css   shared liquid-glass styling

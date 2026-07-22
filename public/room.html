@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="{{lang.tag}}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,26 +49,29 @@
       #list .meta { order: 2; }
       #list li button { order: 3; margin-left: auto; }
     }
+    .lang { position: fixed; top: 16px; right: 20px; font-size: 14px; color: var(--muted); text-decoration: none; }
+    .lang:hover { color: var(--txt); text-decoration: underline; }
   </style>
 </head>
 <body>
+  <a class="lang" href="{{@switchhref}}" hreflang="{{lang.other.tag}}" lang="{{lang.other.tag}}">{{lang.other.name}}</a>
   <div class="wrap">
     <header class="card glass">
-      <div class="qrtile"><img id="qr" alt="QR"></div>
+      <div class="qrtile"><img id="qr" alt="{{room.qr.alt}}"></div>
       <div class="meta">
-        <div class="code">房間碼<b id="roomCode">—</b></div>
+        <div class="code">{{room.code}}<b id="roomCode">—</b></div>
         <div class="url" id="roomUrl"></div>
-        <div class="sub">同一個房間網址 = 同一個資料夾,兩邊即時互通</div>
+        <div class="sub">{{room.tagline}}</div>
         <div class="bar">
-          <form method="POST" action="/logout" style="margin:0"><button class="pill" id="logout" type="submit">登出</button></form>
-          <button class="pill" id="clear">清空房間</button>
+          <form method="POST" action="/logout" style="margin:0"><button class="pill" id="logout" type="submit">{{room.logout}}</button></form>
+          <button class="pill" id="clear">{{room.clear}}</button>
         </div>
       </div>
     </header>
 
     <div id="drop" class="glass">
-      <div class="big">拖拉檔案到這裡</div>
-      或點擊選檔上傳
+      <div class="big">{{room.drop.title}}</div>
+      {{room.drop.hint}}
     </div>
     <input id="picker" type="file" multiple hidden>
 
@@ -88,6 +91,7 @@
       });
     })();
   </script>
+  <script type="application/json" id="i18n">{{@dict}}</script>
   <script src="/app.js"></script>
 </body>
 </html>
